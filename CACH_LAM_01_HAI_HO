@@ -1,0 +1,77 @@
+# 1: Đưa ra thông tin gồm mã số, họ tênvà tên khoa của tất cả các giảng viên
+select TblGiangVien.Magv, TblGiangVien.HoTenGv, TenKhoa
+from TblGiangVien
+left join TblKhoa TK on TblGiangVien.Makhoa = TK.Makhoa;
+;
+
+
+#2: Đưa ra thông tin gồm mã số, họ tênvà tên khoa của các giảng viên của khoa ‘DIA LY va QLTN’
+
+select TblGiangVien.Magv, TblGiangVien.HoTenGv, TenKhoa
+from TblGiangVien
+    left join TblKhoa TK on TblGiangVien.Makhoa = TK.Makhoa
+where TenKhoa='DIA LY' or TenKhoa = 'QLTN';
+
+
+
+#3: Cho biết số sinh viên của khoa ‘CONG NGHE SINH HOC’
+select TenKhoa, COUNT(TblSinhVien.MaKhoa)
+FROM TblSinhVien
+left join TblKhoa TK on TK.Makhoa = TblSinhVien.MaKhoa
+where TenKhoa = 'SINH HOC';
+
+
+#4: Đưa ra danh sách gồm mã số, họ tênvà tuổi của các sinh viên khoa ‘TOAN’
+SELECT Masv, HoTen, TblSinhVien.age, TenKhoa
+From TblSinhVien
+left join TblKhoa TK on TK.Makhoa = TblSinhVien.MaKhoa
+where TenKhoa = 'TOAN';
+;
+
+#5: Cho biết số giảng viên của khoa ‘CONG NGHE SINH HOC’
+
+Select TenKhoa, COUNT(TblGiangVien.Makhoa)
+from TblGiangVien
+left join TblKhoa TK on TblGiangVien.Makhoa = TK.Makhoa
+WHERE TenKhoa = 'SINH HOC' ;
+
+#6: Cho biết thông tin về sinh viên không tham gia thực tập
+
+select TblSinhVien.Masv, HoTen, NamSinh, Quequan
+FROM TblSinhVien
+left join TblHuongDan THD on TblSinhVien.Masv = THD.Masv
+WHERE THD.Masv IS NULL ;
+
+
+#7: Đưa ra mã khoa, tên khoa và số giảng viên của mỗi khoa
+
+SELECT TblKhoa.Makhoa, TenKhoa, COUNT(*) AS totalTeacher
+FROM TblKhoa
+LEFT JOIN TblGiangVien TGV on TblKhoa.Makhoa = TGV.Makhoa
+GROUP BY TblKhoa.Makhoa;
+
+#8: Cho biết số điện thoại của khoa mà sinh viên có tên ‘Le van son’ đang theo học
+
+select TblSinhVien.Hoten, Tk.Dienthoai AS 'SO DIEN THOAI CUA KHOA'
+FROM TblSinhVien
+left join TblKhoa TK on TK.Makhoa = TblSinhVien.MaKhoa
+where HoTen = 'Le Van Son';
+
+
+#9: Cho biết mã số, họ tên, tên khoa của các giảng viên hướng dẫn từ 3 sinh viên trở lên.
+
+select TblGiangVien.Magv,HoTenGv, TenKhoa, COUNT(*) AS Total
+FROM TblGiangVien
+left join TblKhoa TK on TblGiangVien.Makhoa = TK.Makhoa
+right join TblHuongDan THD on TblGiangVien.Magv = THD.Magv
+GROUP BY TblGiangVien.Magv
+having Total >= 3
+;
+
+#10:Cho biết mã số và tên các đề tài có nhiều hơn 2 sinh viên tham gia thực tập
+
+select TD.Madt, TD.Tendt, COUNT(*) AS Total
+From TblHuongDan
+left join TblDetai TD on TD.Madt = TblHuongDan.Madt
+GROUP BY TD.Madt
+HAVING Total > 2;
